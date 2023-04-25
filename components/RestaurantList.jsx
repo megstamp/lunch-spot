@@ -1,12 +1,28 @@
+import { useState, useEffect } from "react"
 import { View, Text, ScrollView, StyleSheet } from "react-native"
+import RestaurantCard from "./RestaurantCard.jsx"
 
 export default function RestaurantList() {
-    return (
-        <View style={styles.container}>
-        <Text style={styles.title}>Restaurant List</Text>
-        <ScrollView style={styles.list}></ScrollView>
-        </View>
-    )
+
+  const [foodList, setFoodList] = useState()
+
+  useEffect(() => {
+    fetch('https://my-first-firestore-bc.web.app/restaurants')
+      .then(resp => resp.json())
+      .then(setFoodList)
+      .catch(alert)
+  }, [])
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Restaurant List</Text>
+      <ScrollView style={styles.list}>
+        {foodList && foodList.map(food => (
+          <RestaurantCard food={food} key={food.id} />
+        ))}
+      </ScrollView>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -19,17 +35,17 @@ const styles = StyleSheet.create({
 
     list: {
         width: "100%",
-        borderColor: "red",
-        borderWidth: 2,
+        // borderColor: "red",
+        // borderWidth: 2,
     },
 
     container: {
         flex: 1,
-        backgroundColor: "pink",
+        // backgroundColor: "pink",
         marginTop: 56,
         marginBottom: 24,
         width: "90%",
         alignItems: "center",
         justifyContent: "flex-start",
-    },
+    }
 })
